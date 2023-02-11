@@ -79,7 +79,7 @@ tasks {
 
     withType<JavaCompile> {
         //Strict compiling
-        options.compilerArgs.addAll(listOf("-Xlint:all", "-Werror"))
+        options.compilerArgs.addAll(listOf("-Xlint:all", "-Xlint:-processing", "-Werror"))
     }
 
     withType<Jar> {
