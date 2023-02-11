@@ -54,17 +54,33 @@ configure<MixinExtension> {
     config("expandmaxcollision.mixins.json")
 }
 
+val tmpSrc = File(buildDir, "tmpSrc/main/java")
+
+val tokens = mapOf(
+    "modName" to project.name,
+    "modId" to project.name.toLowerCase(),
+    "modVersion" to project.version.toString()
+)
+
 tasks {
+    create("cloneSource", Copy::class) {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+        from(File(projectDir, "src/main/java/"))
+        into(tmpSrc)
+        filter<ReplaceTokens>("tokens" to tokens)
+    }
+
+    compileJava {
+        doFirst { source = fileTree(tmpSrc) }
+
+        dependsOn("cloneSource")
+    }
+
     processResources {
         //Replace placeholder
         filesMatching("mcmod.info") {
-            mapOf(
-                "modName" to project.name,
-                "modId" to project.name.toLowerCase(),
-                "modVersion" to project.version.toString()
-            ).let {
-                filter<ReplaceTokens>("tokens" to it)
-            }
+            filter<ReplaceTokens>("tokens" to tokens)
         }
 
         //Include license file
