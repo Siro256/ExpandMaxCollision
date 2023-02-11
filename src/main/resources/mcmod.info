@@ -4,6 +4,7 @@
     "modid": "@modId@",
     "version": "@modVersion@",
     "mcversion": "1.12.2",
-    "logoFile": "logo.png"
+    "logoFile": "logo.png",
+    "url": "https://github.com/Siro256/ExpandMaxCollision"
   }
 ]
