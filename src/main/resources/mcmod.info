@@ -3,6 +3,7 @@
     "name": "@modName@",
     "modid": "@modId@",
     "version": "@modVersion@",
-    "mcversion": "1.12.2"
+    "mcversion": "1.12.2",
+    "logoFile": "logo.png"
   }
 ]
