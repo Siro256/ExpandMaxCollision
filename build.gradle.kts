@@ -77,6 +77,11 @@ tasks {
         }
     }
 
+    withType<JavaCompile> {
+        //Strict compiling
+        options.compilerArgs.addAll(listOf("-Xlint:all", "-Werror"))
+    }
+
     withType<Jar> {
         from(configurations.getByName("includeToJar").copy().apply { isCanBeResolved = true }
             .map { if (it.isDirectory) it else zipTree(it) })
