@@ -1,4 +1,5 @@
 import net.minecraftforge.gradle.userdev.UserDevExtension
+import org.apache.tools.ant.filters.ReplaceTokens
 import org.spongepowered.asm.gradle.plugins.MixinExtension
 
 plugins {
@@ -55,6 +56,16 @@ configure<MixinExtension> {
 
 tasks {
     processResources {
+        //Replace placeholder
+        filesMatching("mcmod.info") {
+            mapOf(
+                "modName" to project.name,
+                "modId" to project.name.toLowerCase(),
+                "modVersion" to project.version.toString()
+            ).let {
+                filter<ReplaceTokens>("tokens" to it)
+            }
+        }
 
         //Include license file
         from(project.file("LICENSE").path) {
