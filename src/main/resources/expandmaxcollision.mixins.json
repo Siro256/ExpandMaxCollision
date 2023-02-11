@@ -3,7 +3,9 @@
   "package": "dev.siro256.forgemod.expandmaxcollision.mixins",
   "compatibilityLevel": "JAVA_8",
   "refmap": "expandmaxcollision.refmap.json",
-  "mixins": [],
+  "mixins": [
+    "MixinWorld"
+  ],
   "client": [],
   "minVersion": "0.8"
 }
