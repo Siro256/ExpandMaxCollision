@@ -1,24 +1,80 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import net.minecraftforge.gradle.userdev.UserDevExtension
+import org.spongepowered.asm.gradle.plugins.MixinExtension
 
 plugins {
     kotlin("jvm") version "1.7.21"
 }
 
+buildscript {
+    repositories {
+        maven { url = uri("https://repo.siro256.dev/repository/maven-public/") }
+    }
+
+    dependencies {
+        classpath("net.minecraftforge.gradle:ForgeGradle:5.1.+") {
+            isChanging = true
+        }
+        classpath("org.spongepowered:mixingradle:0.7-SNAPSHOT")
+    }
+}
+
+apply {
+    plugin("net.minecraftforge.gradle")
+    plugin("org.spongepowered.mixin")
+}
+
 group = "dev.siro256.forgemod.expandmaxcollision"
-version = "1.0-SNAPSHOT"
+version = "1.0.0-SNAPSHOT"
 
 repositories {
-    mavenCentral()
+    maven { url = uri("https://repo.siro256.dev/repository/maven-public/") }
 }
+
+configurations.create("includeToJar")
 
 dependencies {
-    testImplementation(kotlin("test"))
+    add("minecraft", "net.minecraftforge:forge:1.12.2-14.23.5.2860")
+
+    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+    implementation("org.spongepowered:mixin:0.8.5")
+    add("includeToJar", "org.spongepowered:mixin:0.8.5")
 }
 
-tasks.test {
-    useJUnitPlatform()
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+configure<UserDevExtension> {
+    mappings("snapshot", "20171003-1.12")
+}
+
+configure<MixinExtension> {
+    add(sourceSets.main.get(), "expandmaxcollision.refmap.json")
+    config("expandmaxcollision.mixins.json")
+}
+
+tasks {
+    processResources {
+
+        //Include license file
+        from(project.file("LICENSE").path) {
+            rename { "LICENSE_${project.name}" }
+        }
+
+        from(project.file("README.md").path) {
+            rename { "README_${project.name}.md" }
+        }
+    }
+
+    withType<Jar> {
+        from(configurations.getByName("includeToJar").copy().apply { isCanBeResolved = true }
+            .map { if (it.isDirectory) it else zipTree(it) })
+
+        mapOf(
+            "ForceLoadAsMod" to "true",
+            "FMLCorePluginContainsFMLMod" to "true",
+            "FMLCorePlugin" to "dev.siro256.forgemod.expandmaxcollision.ExpandMaxCollision",
+            "TweakClass" to "org.spongepowered.asm.launch.MixinTweaker"
+        ).let { manifest.attributes(it) }
+    }
 }
