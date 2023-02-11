@@ -104,8 +104,6 @@ tasks {
 
         mapOf(
             "ForceLoadAsMod" to "true",
-            "FMLCorePluginContainsFMLMod" to "true",
-            "FMLCorePlugin" to "dev.siro256.forgemod.expandmaxcollision.ExpandMaxCollision",
             "TweakClass" to "org.spongepowered.asm.launch.MixinTweaker"
         ).let { manifest.attributes(it) }
     }
