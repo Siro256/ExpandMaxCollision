@@ -25,7 +25,7 @@ apply {
 }
 
 group = "dev.siro256.forgemod.expandmaxcollision"
-version = "1.0.0-Alpha.1"
+version = "1.0.0-Alpha.2"
 
 repositories {
     maven { url = uri("https://repo.siro256.dev/repository/maven-public/") }
