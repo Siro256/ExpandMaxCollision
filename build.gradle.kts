@@ -103,7 +103,6 @@ tasks {
             .map { if (it.isDirectory) it else zipTree(it) })
 
         mapOf(
-            "ForceLoadAsMod" to "true",
             "TweakClass" to "org.spongepowered.asm.launch.MixinTweaker"
         ).let { manifest.attributes(it) }
     }
